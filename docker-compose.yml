@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./backend # Adjust path if necessary
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - SPRING_AI_OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+      - SPRING_AI_GOOGLE_GENAI_API_KEY=${GOOGLE_API_KEY}
+      - SPRING_AI_OPENAI_API_KEY=${GROQ_API_KEY}
+      - APP_GITHUB_TOKEN=${GITHUB_TOKEN}
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Vital for Ollama on Windows
+#      On Windows, set the Environment Variable OLLAMA_HOST=0.0.0.0 and restart Ollama.
+
+  frontend:
+    build:
+      context: ./frontend # Adjust path if necessary
+    ports:
+      - "5173:80" # Maps local 5173 to Nginx port 80
+    depends_on:
+      - backend
