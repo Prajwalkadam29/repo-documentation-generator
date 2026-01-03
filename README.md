@@ -80,6 +80,10 @@ iii) Run the application:
 ```bash
 mvn spring-boot:run
 ```
+**Note:** If you don't have maven installed on the system, then use the following command:
+```bash
+./mvnw spring-boot:run
+```
 
 ### 2. Frontend (React + Vite)
 
