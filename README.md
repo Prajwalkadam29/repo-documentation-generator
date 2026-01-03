@@ -28,9 +28,10 @@
 
 ---
 
-## ⚙️ Configuration (.env)
-The application requires API keys and tokens to function. Create a `.env` file in the root directory.
+## ⚙️ Configuration (.env & application.properties)
 
+### 1. API Keys (.env)
+The application requires API keys and tokens to function. Create a `.env` file in the root directory to store your sensitive credentials:
 ```
 # AI API Keys
 GOOGLE_API_KEY=your_google_gemini_key
@@ -44,6 +45,23 @@ GITHUB_TOKEN=your_github_personal_access_token
 # When using Docker, use host.docker.internal to reach your Windows host.
 OLLAMA_BASE_URL=http://host.docker.internal:11434
 ```
+
+### 2. Customizing File Discovery
+By default, the application analyzes common files like `.java`, `.py`, `.js`, `.yml`, and `.txt`.
+
+**To include additional file types (e.g., Rust, Go, Terraform):**
+1. In backend, navigate to `src/main/resources/application.properties`.
+
+
+2. Locate the `app.github.include-patterns` key.
+
+
+3. Append your desired extensions (e.g., `*.rs`, `**/*.go`, `*.tf`).
+```properties
+# Example: Adding Rust and Go support
+app.github.include-patterns=...,*.rs,**/*.rs,*.go,**/*.go
+```
+
 ---
 
 ## 🐳 Running with Docker (Recommended)
@@ -145,6 +163,24 @@ The suite includes tests for:
 * **Path Matchers:** Ensuring complex glob patterns work across OS types.
 * **API Clients:** Mocked `RestClient` flows for GitHub communication.
 * **AI Factory:** Validation of the Strategy pattern implementation.
+
+---
+
+## 💡 Tips for Best Results
+
+To get the most accurate and cost-effective documentation, keep the following best practices in mind:
+
+### 🧠 Mind the AI Context Window
+Large Language Models have a **Context Window** (a limit on how much text they can process at once).
+* **Include Source, Not Data**: Only add extensions for code files. Avoid adding large data files like `.csv`, `.json` datasets, or `.log` files in `application.properties`, as these will consume your API tokens quickly without adding much value to the documentation.
+* **Keep it Lean**: If your project is massive, use the `exclude-patterns` in `application.properties` to skip secondary directories or legacy code that doesn't define the core project structure.
+
+### 🔑 Security First
+The AI is instructed to identify environment variables and create a `.env.example` template for you.
+* **Redaction**: The system is designed to provide placeholders like `YOUR_API_KEY`. However, as a best practice, always double-check the generated output before committing it to a public repository to ensure no sensitive hardcoded strings were accidentally included.
+
+### 🐳 Docker Suggestions
+Even if your project doesn't have a `Dockerfile`, the AI will suggest one. For the best suggestion, ensure your `pom.xml`, `package.json`, or `requirements.txt` are included in the file collection, as the AI uses these to determine the correct base image and build steps.
 
 ---
 
